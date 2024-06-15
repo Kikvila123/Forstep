@@ -1,0 +1,54 @@
+{% extends 'base.html' %} {% block content %}
+<div class="message-box">
+  <h2>ჩათის კოდი: {{code}}</h2>
+  <div class="messages" id="messages"></div>
+  <div class="inputs">
+    <input
+      type="text"
+      rows="3"
+      placeholder="მესიჯი"
+      name="message"
+      id="message"
+    />
+    <!-- შეტყობინების შეყვანის ველი -->
+    <button type="button" name="send" id="send-btn" onClick="sendMessage()">
+      Send
+    </button> <!-- გაგზავნის ღილაკი, რომელიც გამოიძახებს sendMessage ფუნქციას -->
+  </div>
+</div>
+<script type="text/javascript"> 
+  var socketio = io();
+
+  const messages = document.getElementById("messages"); //-- იღებს ელემენტს, სადაც შეტყობინებები გამოჩნდება -->
+
+  const createMessage = (name, msg) => {
+    const content = `
+    <div class="text">
+        <span>
+            <strong>${name}</strong>: ${msg}
+        </span>
+        <span class="muted">
+            ${new Date().toLocaleString()}
+        </span>
+    </div>
+    `;
+    messages.innerHTML += content; //-- ამატებს ახალ შეტყობინებას კონტეინერში -->
+  };
+ 
+  socketio.on("message", (data) => { 
+    createMessage(data.name, data.message);
+  });  // უსმენს "message" მოვლენას Socket.IO-დან და იძახებს createMessage ფუნქციას ახალი მონაცემებით // 
+
+  const sendMessage = () => {
+    const message = document.getElementById("message");
+    if (message.value == "") return;
+    socketio.emit("message", { data: message.value });
+    message.value = "";
+  };
+</script>
+{% for msg in messages %}  <!-- ციკლი, რომელიც გადის შეტყობინებებს და ქმნის თითოეული შეტყობინების ელემენტებს -->
+<script type="text/javascript">
+  createMessage("{{msg.name}}", "{{msg.message}}"); // იძახებს createMessage ფუნქციას თითოეული შეტყობინებისთვის -->
+</script> 
+{% endfor %} <!-- ციკლის დასასრული --> 
+{% endblock %} <!-- content ბლოკის დასასრული -->

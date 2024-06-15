@@ -1,0 +1,87 @@
+
+body {
+  background-image: url(/static/Chatbackground.jpg);
+  margin: 0; 
+  padding: 0; 
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #dadd16;
+  width: auto;
+}
+
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; 
+}
+
+
+.join {
+  display: flex;
+  width: 100%;
+}
+
+
+.create-btn {
+  width: 100%;
+}
+
+
+.message-box {
+  border: 2px solid rgb(173, 12, 12);
+  border-radius: 10px; 
+  background-image: url('/static/Chatbackground.jpg'); 
+  background-color: red; 
+  background-size: cover; 
+  background-repeat: no-repeat; 
+  background-position: center; 
+  height: 80vh; 
+  width: 80vw; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: stretch; 
+  padding: 20px; 
+}
+.message-box .messages {
+  color: #da1818; 
+}
+
+
+
+.messages {
+  overflow-y: scroll;
+  flex: 1;
+  width: 100%;
+}
+
+
+.inputs {
+  padding: 10px;
+  display: flex;
+}
+
+
+h2 {
+  text-align: center;
+  color: #da1818;
+}
+
+
+.text {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px; 
+}
+
+
+.muted {
+  font-size: 10px;
+  color: darkgray;
+}

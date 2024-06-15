@@ -1,0 +1,24 @@
+{% extends 'base.html' %} {% block content %}
+<form method="post" class="buttons">
+  <h3>ჩათში შესვლა</h3>
+  <div>
+    <label>სახელი:</label>
+    <input
+      type="text"
+      placeholder="შეიყვანეთ სახელი"
+      name="name"
+      value="{{name}}"
+    />
+  </div>
+  <div class="join">
+    <input type="text" placeholder="ჩათის კოდი" name="code" value="{{code}}" />
+    <button type="submit" name="join">შესვლა</button>
+  </div>
+  <button type="submit" name="create" class="create-btn">შექმნა</button>
+  {% if error %}
+  <ul>
+    <li>{{error}}</li>
+  </ul>
+  {% endif %}
+</form>
+{% endblock %}
