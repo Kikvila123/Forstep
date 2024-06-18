@@ -1,8 +1,26 @@
 # სერვერის გაშვება და კონფიგურაცია
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for,Request
 from flask_socketio import join_room, leave_room, send, SocketIO
 import random
 from string import ascii_uppercase
+from flask_login import current_user
+from flask_sqlalchemy import SQLAlchemy
+
+
+ 
+app = Flask(__name__)
+ 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:123asdASD@localhost/chat_app' 
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+db.init_app(app)
+class User(db.Model): 
+    id = db.Column(db.Integer, primary_key=True) 
+    username = db.Column(db.String(80), unique=True, nullable=False) 
+    email = db.Column(db.String(120), unique=True, nullable=False) 
+    def __repr__(self): 
+        return f'<User {self.username}>'
+
 
 # Flask აპლიკაციის შექმნა
 app = Flask(__name__)
@@ -22,12 +40,20 @@ def generate_unique_code(length):
     
     return code
 
+
+@app.route('/login', methods=['GET','POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home.html'))
+
 # მთავარი გვერდი (home page)
 @app.route("/", methods=["POST", "GET"])
 def home():
     session.clear() #სესიის დაქლეარება
      # POST მეთოდით ფორმის გადაცემა
     if request.method == "POST":
+        username = request.form['username']
+        email = request.form["email"]
         name = request.form.get("name")
         code = request.form.get("code")
         join = request.form.get("join", False)
@@ -54,7 +80,16 @@ def home():
         return redirect(url_for("room")) # room ფუნქციის გამოძახება
    
 
-    return render_template("home.html")     # home.html შაბლონის ჩატვირთვა
+    return render_template("register.html")     # register.html შაბლონის ჩატვირთვა
+
+@app.route("/users")
+def users():
+    cur = mysql.connection.cursor()
+    users = cur.execute("SELECT *FROM useres")
+    if users > 0:
+        userDetails = cur.fetchall()
+
+        return render_template("home.html", userDetails=userDetails)
 
 # ჩათს გვერდი (room page)
 @app.route("/room")
